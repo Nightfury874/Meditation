@@ -1,0 +1,120 @@
+/* Importing Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto Slab', serif;
+    background: #121212;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: #1e1e1e;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 25px;
+    color: #bb86fc;
+    font-size: 2em;
+    font-weight: 700;
+}
+
+.step-title {
+    font-size: 1.4em;
+    margin: 25px 0 15px;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.step-description {
+    font-size: 1em;
+    margin-bottom: 25px;
+    line-height: 1.6;
+    color: #b0b0b0;
+}
+
+.timer {
+    font-size: 3em;
+    margin-bottom: 30px;
+    color: #03dac6;
+    font-weight: 700;
+    transition: transform 0.3s ease;
+}
+
+.timer.active {
+    transform: scale(1.05);
+}
+
+.controls button {
+    padding: 12px 25px;
+    margin: 0 10px;
+    font-size: 1em;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    color: #ffffff;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.controls button#start {
+    background: #03dac6;
+}
+
+.controls button#pause {
+    background: #ffb74d;
+}
+
+.controls button#reset {
+    background: #e57373;
+}
+
+.controls button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.controls button:active {
+    transform: translateY(0px);
+}
+
+.progress {
+    margin-top: 25px;
+    height: 12px;
+    background: #333333;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0;
+    background: #03dac6;
+    transition: width 0.5s ease;
+    border-radius: 6px 0 0 6px;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 30px 20px;
+    }
+    .timer {
+        font-size: 2.5em;
+    }
+    .controls button {
+        padding: 10px 20px;
+        margin: 0 5px;
+        font-size: 0.9em;
+    }
+}
