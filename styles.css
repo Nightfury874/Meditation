@@ -1,120 +1,127 @@
-/* Importing Google Font */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap');
-
 body {
-    font-family: 'Roboto Slab', serif;
-    background: #121212;
-    color: #e0e0e0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+    background-color: #000; /* Dark background */
+    background-image: url('cloud1.svg'), url('cloud2.svg'); /* Add your cloud SVG files here */
+    background-repeat: no-repeat;
+    background-position: center top, center bottom;
+    background-size: cover;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #fff; /* White text for contrast */
     margin: 0;
+    padding: 0;
 }
 
 .container {
-    background: #1e1e1e;
-    padding: 40px 30px;
-    border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-    max-width: 500px;
     width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+h1, h2 {
     text-align: center;
+    color: #fff;
 }
 
-h1 {
-    margin-bottom: 25px;
-    color: #bb86fc;
-    font-size: 2em;
-    font-weight: 700;
+#session-setup, #meditation-session, #report {
+    margin-top: 30px;
 }
 
-.step-title {
-    font-size: 1.4em;
-    margin: 25px 0 15px;
-    color: #ffffff;
-    font-weight: 700;
+.session-item {
+    border-bottom: 1px solid #333;
+    padding: 15px 0;
+    display: flex;
+    flex-direction: column;
 }
 
-.step-description {
-    font-size: 1em;
-    margin-bottom: 25px;
-    line-height: 1.6;
-    color: #b0b0b0;
+.session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.timer {
-    font-size: 3em;
-    margin-bottom: 30px;
-    color: #03dac6;
-    font-weight: 700;
-    transition: transform 0.3s ease;
+.session-header h2 {
+    margin: 0;
 }
 
-.timer.active {
-    transform: scale(1.05);
+.session-item h3 {
+    margin: 0;
+    color: #fff;
 }
 
-.controls button {
-    padding: 12px 25px;
+.duration-controls {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.duration-controls label {
+    flex: 1;
+    color: #fff;
+}
+
+.duration-slider {
+    flex: 2;
     margin: 0 10px;
-    font-size: 1em;
+}
+
+.duration-value {
+    flex: 0.5;
+    text-align: right;
+    color: #fff;
+}
+
+.skip-toggle {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.skip-toggle input {
+    margin-right: 5px;
+}
+
+#proceed-button, #restart-button, #end-session-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #444;
+    color: #fff;
     border: none;
-    border-radius: 30px;
     cursor: pointer;
-    color: #ffffff;
-    transition: background 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
-.controls button#start {
-    background: #03dac6;
+#proceed-button:hover, #restart-button:hover, #end-session-button:hover {
+    background-color: #666;
 }
 
-.controls button#pause {
-    background: #ffb74d;
+#timer {
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: 20px;
 }
 
-.controls button#reset {
-    background: #e57373;
+#current-description {
+    text-align: center;
+    margin: 20px 0;
+    line-height: 1.5;
+    font-size: 1em;
+    padding: 0 10px;
 }
 
-.controls button:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
-}
-
-.controls button:active {
-    transform: translateY(0px);
-}
-
-.progress {
-    margin-top: 25px;
-    height: 12px;
-    background: #333333;
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    width: 0;
-    background: #03dac6;
-    transition: width 0.5s ease;
-    border-radius: 6px 0 0 6px;
-}
-
-@media (max-width: 600px) {
-    .container {
-        padding: 30px 20px;
+@media screen and (max-width: 600px) {
+    .duration-controls {
+        flex-direction: column;
+        align-items: flex-start;
     }
-    .timer {
-        font-size: 2.5em;
+    .duration-value {
+        text-align: left;
+        margin-top: 5px;
     }
-    .controls button {
-        padding: 10px 20px;
-        margin: 0 5px;
-        font-size: 0.9em;
+    .session-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .session-header button {
+        margin-top: 10px;
     }
 }

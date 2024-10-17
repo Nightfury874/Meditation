@@ -2,34 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Full-Body Grounding Meditation</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
-    <!-- External CSS -->
+    <title>Meditation Session</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<div class="container">
-    <h1>Full-Body Grounding Meditation</h1>
-    <div class="step-title" id="step-title">Find a Quiet Space</div>
-    <div class="step-description" id="step-description">
-        Sit or lie down comfortably in a quiet room. Make sure you won’t be disturbed for the next hour. Dim the lights or close your eyes to reduce external distractions.
+    <div class="container">
+        <h1>Meditation Session</h1>
+        <div id="session-setup">
+            <div id="sessions"></div>
+            <button id="proceed-button">Proceed</button>
+        </div>
+        <div id="meditation-session" style="display: none;">
+            <div class="session-header">
+                <h2 id="current-title"></h2>
+            </div>
+            <p id="current-description"></p>
+            <p id="timer">Time Remaining: <span id="time-remaining"></span></p>
+            <button id="end-session-button">End Session</button>
+        </div>
+        <div id="report" style="display: none;">
+            <h2>Session Report</h2>
+            <p id="report-content"></p>
+            <button id="restart-button">Restart</button>
+        </div>
     </div>
-    <div class="timer" id="timer">05:00</div>
-    <div class="controls">
-        <button id="start">Start</button>
-        <button id="pause">Pause</button>
-        <button id="reset">Reset</button>
-    </div>
-    <div class="progress">
-        <div class="progress-bar" id="progress-bar"></div>
-    </div>
-</div>
-
-<!-- External JavaScript -->
-<script src="script.js"></script>
-
+    <script src="script.js"></script>
 </body>
 </html>
