@@ -2,30 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Meditation Session</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Homestyles.css">
+    
+    <!-- Site name -->
+    <title>7 min to mindfulness</title>
+    
+    <!-- Favicon (assuming your favicon is saved as favicon.ico in the root directory) -->
+    <link rel="icon" type="image/png" href="Assets/favicon.png">
 </head>
 <body>
     <div class="container">
-        <h1>Meditation Session</h1>
-        <div id="session-setup">
-            <div id="sessions"></div>
-            <button id="proceed-button">Proceed</button>
-        </div>
-        <div id="meditation-session" style="display: none;">
-            <div class="session-header">
-                <h2 id="current-title"></h2>
+        <a href="https://nightfury874.github.io/MindfulBreathing">
+            <button class="breathe-button">Breathe!</button>
+        </a>
+        <div class="content">
+            <div class="text-content">
+                <h1 class="header">Fully ground your mind in this chaotic world</h1>
+                <p class="subheader">Calm your mind and your soul will speak</p>
+                <p class="subheader">7 minutes can make a difference. Won't cost anything</p>
+                <a href="meditate.html">
+                    <button class="cta-button">Try now</button>
+                </a>
             </div>
-            <p id="current-description"></p>
-            <p id="timer">Time Remaining: <span id="time-remaining"></span></p>
-            <button id="end-session-button">End Session</button>
-        </div>
-        <div id="report" style="display: none;">
-            <h2>Session Report</h2>
-            <p id="report-content"></p>
-            <button id="restart-button">Restart</button>
+            <div class="svg-container">
+                <img src="Assets/homeMeditation.PNG" alt="Placeholder SVG">
+            </div>
         </div>
     </div>
-    <script src="script.js"></script>
 </body>
 </html>

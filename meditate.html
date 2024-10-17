@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Full mind grounding</title>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="Assets/favicon.png">
+</head>
+<body>
+    <div class="container">
+        <h1 class="header">Full mind grounding</h1>
+        <div id="session-setup">
+            <div id="sessions" class="cards-container">
+                <!-- Session cards will be dynamically generated here -->
+            </div>
+            <button id="proceed-button">Proceed</button>
+        </div>
+        <div id="meditation-session" style="display: none;">
+            <div class="session-header">
+                <h2 id="current-title"></h2>
+                <img id="current-session-image" src="" alt="Meditation Session Image" class="current-session-image">
+            </div>
+            <p id="current-description"></p>
+            <p id="timer">Time Remaining: <span id="time-remaining"></span></p>
+            <button id="end-session-button">End Session</button>
+        </div>
+        <div id="report" style="display: none;">
+            <h2>Session Report</h2>
+            <div id="report-content"></div>
+            <button id="restart-button">Restart</button>
+        </div>
+    </div>
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
