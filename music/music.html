@@ -378,7 +378,7 @@
                 modal.style.display = 'none';
 
                 // Start the 30-second timer to show the Listen button
-                setTimeout(showListenButton, 5000); // 30000 milliseconds = 30 seconds
+                setTimeout(showListenButton, 10000); // 30000 milliseconds = 30 seconds
             }
         }
 
@@ -466,7 +466,7 @@
 
             // Reduce canvas music volume
             if (canvasMasterGain) {
-                canvasMasterGain.gain.setTargetAtTime(0.2, audioCtx.currentTime, 0.01); // Reduce to 20% volume
+                canvasMasterGain.gain.setTargetAtTime(0.1, audioCtx.currentTime, 0.01); // Reduce to 20% volume
             }
 
             // Show the popup
