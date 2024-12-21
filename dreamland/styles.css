@@ -1,0 +1,212 @@
+/* ======================================================
+   MODE COLORS
+   ====================================================== */
+
+/* Night Mode (Default) */
+body.night-mode {
+  background: linear-gradient(40deg, #0a1a27, #4e83b7);
+  transition: background 1.5s ease; /* Smooth transition */
+}
+
+/* Evening Mode */
+body.evening-mode {
+  background: linear-gradient(40deg, #f2a65a, #d96459);
+  transition: background 1.5s ease;
+}
+
+/* Day Mode */
+body.day-mode {
+  background: linear-gradient(40deg, #4ebdf2, #f6eee2);
+  transition: background 1.5s ease; /* Smooth transition */
+}
+
+/* Stars canvas */
+#sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none; /* Allow clicks to pass through */
+  transition: opacity 1.5s ease;
+}
+
+/* Stars visibility based on mode */
+body.night-mode #sky {
+  opacity: 1;
+}
+
+body.evening-mode #sky {
+  opacity: 0.5; /* Partial visibility during evening */
+}
+
+body.day-mode #sky {
+  opacity: 0; /* Hide stars during day */
+}
+
+/* ======================================================
+   GLOBAL STYLES
+   ====================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  overflow: hidden; /* Prevent scrollbars if elements go out */
+  font-family: Arial, sans-serif;
+}
+
+/* ======================================================
+   BUTTON STYLING
+   ====================================================== */
+
+/* Button Container */
+#buttonContainer {
+  position: absolute;
+  top: 50%;
+  right: 10%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 10;
+}
+
+/* Individual Buttons */
+.modeBtn {
+  padding: 12px 24px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.modeBtn:hover {
+  background-color: rgba(255, 255, 255, 1);
+  transform: translateY(-3px);
+}
+
+.modeBtn:active {
+  transform: translateY(1px);
+}
+
+/* ======================================================
+   ANIMATIONS
+   ====================================================== */
+
+@keyframes bounce {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes sway-small {
+  from {
+    transform: translateX(0px);
+  }
+  to {
+    transform: translateX(-24px);
+  }
+}
+
+@keyframes sway-big {
+  from {
+    transform: translateX(0px);
+  }
+  to {
+    transform: translateX(-48px);
+  }
+}
+
+/* ======================================================
+   PLACEMENTS
+   ====================================================== */
+
+/* MOUNTAINS */
+#mountains {
+  z-index: 2;
+  position: absolute;
+  bottom: 20%;
+  margin-bottom: -16px;
+  left: 100px;
+}
+
+/* HILLS */
+#hills {
+  position: absolute;
+  left: 100px;
+  margin-left: -120px;
+  margin-bottom: -86px;
+  bottom: 20%;
+  z-index: 3;
+}
+
+/* CLOUD 1 */
+#cloud1 {
+  z-index: 2;
+  position: absolute;
+  top: 20%;
+  right: 4%;
+  animation: sway-big 10s ease-in-out infinite alternate;
+}
+
+/* CLOUD 2 */
+#cloud2 {
+  z-index: 1;
+  position: absolute;
+  top: 22%;
+  right: 16%;
+  animation: sway-small 10s ease-in-out infinite alternate;
+}
+
+/* TREES */
+.trees {
+  width: 100%;
+  height: 130px;
+  z-index: 4;
+  position: absolute;
+  bottom: 20%;
+  margin-bottom: -100px;
+}
+
+/* GROUND */
+#ground {
+  z-index: 1;
+  width: 100%;
+  height: 20%;
+  position: absolute;
+  bottom: 0;
+  background: linear-gradient(210deg, #879759, #648459);
+  transition: background 1.5s ease;
+}
+
+/* ======================================================
+   RESPONSIVE DESIGN
+   ====================================================== */
+
+/* Optional: scale on smaller screens */
+@media (max-width: 960px) {
+  body {
+    zoom: 0.7;
+  }
+
+  /* Adjust button size on smaller screens */
+  .modeBtn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Life Grounding</title>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="life.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="Assets/favicon.png">
+</head>
+<body>
+    <div class="container">
+        <!-- <h1 class="header">Life Grounding</h1> -->
+        
+        <!-- Customize Button Positioned at Top Right -->
+        <button id="customize-button">Customize</button>
+        
+        <!-- Placeholder Image -->
+        <div class="placeholder-image-container">
+            <img src="Assets/life.png" alt="Life Placeholder Image" class="placeholder-image">
+        </div>
+        
+        <!-- Buttons Container -->
+        <div id="life-session-setup">
+            <button id="proceed-button">Proceed</button>
+        </div>
+        
+        <!-- Meditation Session Section (Reused from meditate.html) -->
+        <div id="meditation-session" style="display: none;">
+            <div class="session-header">
+                <h2 id="current-title"></h2>
+                <img id="current-session-image" src="" alt="Meditation Session Image" class="current-session-image">
+            </div>
+            <p id="current-description"></p>
+            <p id="timer">Time Remaining: <span id="time-remaining"></span></p>
+            <button id="end-session-button">End Session</button>
+        </div>
+        
+        <!-- Report Section (Reused from meditate.html) -->
+        <div id="report" style="display: none;">
+            <h2>Session Report</h2>
+            <div id="report-content"></div>
+            <button id="restart-button">Restart</button>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const proceedButton = document.getElementById('proceed-button');
+            const customizeButton = document.getElementById('customize-button');
+            const placeholderContainer = document.querySelector('.placeholder-image-container');
+            const meditationSession = document.getElementById('meditation-session');
+            const reportSection = document.getElementById('report');
+            const endSessionButton = document.getElementById('end-session-button');
+            const restartButton = document.getElementById('restart-button');
+
+            // Function to handle Proceed button click
+            proceedButton.addEventListener('click', function() {
+                if (placeholderContainer) {
+                    placeholderContainer.style.display = 'none';
+                }
+                
+                if (meditationSession) {
+                    meditationSession.style.display = 'block';
+                    startMeditationSession(); // Assuming you have this function
+                }
+
+                // Optionally hide the buttons
+                const buttonsContainer = document.getElementById('life-session-setup');
+                if (buttonsContainer) {
+                    buttonsContainer.style.display = 'none';
+                }
+            });
+
+    
+
+            // Function to handle End Session button click
+            endSessionButton.addEventListener('click', function() {
+                if (meditationSession) {
+                    meditationSession.style.display = 'none';
+                }
+
+                if (reportSection) {
+                    reportSection.style.display = 'block';
+                    generateReport(); // Assuming you have this function
+                }
+            });
+
+            // Function to handle Restart button click
+            restartButton.addEventListener('click', function() {
+                if (reportSection) {
+                    reportSection.style.display = 'none';
+                }
+
+                if (buttonsContainer) {
+                    buttonsContainer.style.display = 'block';
+                }
+
+                if (placeholderContainer) {
+                    placeholderContainer.style.display = 'block';
+                }
+            });
+
+            // Placeholder for meditation session logic
+            function startMeditationSession() {
+                // Implement your meditation session logic here
+                console.log('Meditation session started.');
+            }
+
+            // Placeholder for report generation logic
+            function generateReport() {
+                // Implement your report generation logic here
+                const reportContent = document.getElementById('report-content');
+                if (reportContent) {
+                    reportContent.innerHTML = '<p>Your meditation session was successful!</p>';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
