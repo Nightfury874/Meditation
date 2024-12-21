@@ -60,6 +60,72 @@
             text-align: center;
             margin-top: 20px;
         }
+        /* Listen Button Styles */
+        #listenButton {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #ffe601;
+            border: none;
+            border-radius: 5px;
+            color: #000000;
+            font-size: 16px;
+            cursor: pointer;
+            display: none; /* Hidden initially */
+            z-index: 5;
+            transition: background 0.3s;
+        }
+        #listenButton:hover {
+            background: #ff7402;
+        }
+        /* Dropdown Styles */
+        #dropdown {
+            position: absolute;
+            top: 60px; /* Below the button */
+            left: 20px;
+            background: #444;
+            border: 1px solid #555;
+            border-radius: 5px;
+            display: none; /* Hidden initially */
+            z-index: 5;
+        }
+        .dropdown-item {
+            padding: 10px 20px;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .dropdown-item:hover {
+            background: #555;
+        }
+        /* Popup Styles */
+        #audioPopup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #333;
+            padding: 20px 30px;
+            border-radius: 10px;
+            color: #fff;
+            display: none; /* Hidden initially */
+            z-index: 15;
+            text-align: center;
+        }
+        #closePopup {
+            margin-top: 20px;
+            padding: 5px 15px;
+            background: #ff4d4d;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #closePopup:hover {
+            background: #ff1a1a;
+        }
     </style>
 </head>
 <body>
@@ -75,6 +141,24 @@
 
     <h1>Music</h1>
     <canvas id="canvas"></canvas>
+
+    <!-- Listen Button -->
+    <button id="listenButton">Still sad? Listen to these</button>
+
+    <!-- Dropdown Menu -->
+    <div id="dropdown">
+        <div class="dropdown-item" data-audio="yellow">Yellow (Piano)</div>
+        <!-- <div class="dropdown-item" data-audio="song2">Song 2</div> -->
+        <!-- <div class="dropdown-item" data-audio="song3">Song 3</div> -->
+        <!-- Add more items as needed -->
+    </div>
+
+    <!-- Audio Popup -->
+    <div id="audioPopup">
+        <p id="popupText">Playing {name}</p>
+        <button id="closePopup">Close</button>
+    </div>
+
     <script>
         // Define variables and classes outside to make them accessible globally
         let audioCtx;
@@ -98,6 +182,9 @@
         const rects = [];
         const notes = [];
         const particles = [];
+
+        // Master Gain Node for Canvas Music
+        let canvasMasterGain;
 
         // Rect Class
         class Rect {
@@ -130,8 +217,8 @@
                 this.gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + this.dur);
                 // Connect oscillator to gain node
                 this.oscillator.connect(this.gain);
-                // Connect gain node to destination
-                this.gain.connect(audioCtx.destination);
+                // Connect gain node to master gain node
+                this.gain.connect(canvasMasterGain);
                 // Start the oscillator
                 this.oscillator.start(audioCtx.currentTime);
                 this.stop = false;
@@ -278,12 +365,27 @@
             if (!isAudioStarted) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 isAudioStarted = true;
+
+                // Create Master Gain Node for Canvas Music
+                canvasMasterGain = audioCtx.createGain();
+                canvasMasterGain.gain.value = 1; // Normal volume
+                canvasMasterGain.connect(audioCtx.destination);
+
                 Init();
                 window.addEventListener('resize', Init, false);
                 // Remove the modal
                 const modal = document.getElementById('modal');
                 modal.style.display = 'none';
+
+                // Start the 30-second timer to show the Listen button
+                setTimeout(showListenButton, 5000); // 30000 milliseconds = 30 seconds
             }
+        }
+
+        // Show Listen Button Function
+        function showListenButton() {
+            const listenBtn = document.getElementById('listenButton');
+            listenBtn.style.display = 'block';
         }
 
         // Event Listener for Start Button
@@ -317,6 +419,83 @@
                 y: Math.round(evt.clientY - ClientRect.top)
             };
         }
+
+        // ------------------- New Features Below -------------------
+
+        // Listen Button and Dropdown Elements
+        const listenButton = document.getElementById('listenButton');
+        const dropdown = document.getElementById('dropdown');
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
+        const audioPopup = document.getElementById('audioPopup');
+        const popupText = document.getElementById('popupText');
+        const closePopup = document.getElementById('closePopup');
+
+        let currentAudio = null; // To keep track of the currently playing audio
+
+        // Event Listener for Listen Button
+        listenButton.addEventListener('click', function(event) {
+            // Toggle dropdown visibility
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            } else {
+                dropdown.style.display = 'block';
+            }
+        });
+
+        // Event Listeners for Dropdown Items
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function(event) {
+                const audioName = this.getAttribute('data-audio');
+                playAudio(audioName);
+                // Hide dropdown after selection
+                dropdown.style.display = 'none';
+            });
+        });
+
+        // Function to Play Audio
+        function playAudio(name) {
+            // If there's already an audio playing, pause and reset it
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+
+            // Create a new audio element
+            currentAudio = new Audio(`asset/${name}.mp3`); // Ensure your audio files are named accordingly
+            currentAudio.play();
+
+            // Reduce canvas music volume
+            if (canvasMasterGain) {
+                canvasMasterGain.gain.setTargetAtTime(0.2, audioCtx.currentTime, 0.01); // Reduce to 20% volume
+            }
+
+            // Show the popup
+            popupText.textContent = `Playing ${name}`;
+            audioPopup.style.display = 'block';
+        }
+
+        // Event Listener for Close Popup Button
+        closePopup.addEventListener('click', function() {
+            audioPopup.style.display = 'none';
+            // Stop the audio
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                currentAudio = null;
+            }
+            // Restore canvas music volume
+            if (canvasMasterGain) {
+                canvasMasterGain.gain.setTargetAtTime(1, audioCtx.currentTime, 0.01); // Restore to 100% volume
+            }
+        });
+
+        // Optional: Hide dropdown if clicked outside
+        document.addEventListener('click', function(event) {
+            if (!listenButton.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
     </script>
 </body>
 </html>
