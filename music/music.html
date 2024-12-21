@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Music is Love</title>
+    <canvas id="canvas"></canvas>
+    <style>
+        body {
+            background-color: #222;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            background: radial-gradient(farthest-corner circle at left bottom, #ffbf02, #ff7f01);
+            display: block;
+            margin: 0 auto;
+        }
+        /* Modal Styles */
+        #modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(34, 34, 34, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #modalContent {
+            background: #333;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 100%;
+        }
+        #startButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #ff7f01;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #startButton:hover {
+            background: #ffbf02;
+        }
+        h1 {
+            color: #fff;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modal Overlay -->
+    <div id="modal">
+        <div id="modalContent">
+            <h2>Music is Love</h2>
+            <p>Calm yourself by doing this, no one is gonna judge you.</p>
+            <p>Remember to put on your HEADPHONES</p>
+            <button id="startButton">Start</button>
+        </div>
+    </div>
+
+    <h1>Music</h1>
+    <canvas id="canvas"></canvas>
+    <script>
+        // Define variables and classes outside to make them accessible globally
+        let audioCtx;
+        let isAudioStarted = false;
+
+        // Frequencies and symbols
+        const frecuencias = [4186.01, 3951.07, 3729.31, 3520.00, 3322.44, 3135.96, 2959.96, 2793.83, 2637.02, 2489.02, 2349.32, 2217.46, 2093.00, 1975.53, 1864.66, 1760.00, 1661.22, 1567.98, 1479.98, 1396.91, 1318.51, 1244.51, 1174.66, 1108.73, 1046.50, 987.767, 932.328, 880.000, 830.609, 783.991, 739.989, 698.456, 659.255, 622.254, 587.330, 554.365, 523.251, 493.883, 466.164, 440.000, 415.305, 391.995, 369.994, 349.228, 329.628, 311.127, 293.665, 277.183, 261.626, 246.942, 233.082, 220.000, 207.652, 195.998, 184.997, 174.614, 164.814, 155.563, 146.832, 138.591, 130.813, 123.471, 116.541, 110.000, 103.826, 97.9989, 92.4986, 87.3071, 82.4069, 77.7817, 73.4162, 69.2957, 65.4064, 61.7354, 58.2705, 55.0000, 51.9130, 48.9995, 46.2493, 43.6536, 41.2035, 38.8909, 36.7081, 34.6479];
+        const symbols = ['\u2669', '\u266a', '\u266b', '\u266c'];
+
+        // Canvas setup
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        let cw = canvas.width = window.innerWidth;
+        let ch = canvas.height = window.innerHeight;
+        let w = cw / 12;
+        let h = ch / 7;
+
+        let requestId = null;
+        const rad = Math.PI / 180;
+
+        const rects = [];
+        const notes = [];
+        const particles = [];
+
+        // Rect Class
+        class Rect {
+            constructor(x, y, freq) {
+                this.w = cw / 12;
+                this.h = ch / 7;
+                this.x = x;
+                this.y = y;
+                // Audio properties
+                this.stop = true;
+                this.frequency = freq; // Frequency
+                this.waveform = "triangle"; // Waveform type
+                this.dur = 0.75; // Duration in seconds
+                this.initialGain = 0.15;
+            }
+
+            play() {
+                if (!audioCtx) return; // Ensure audioCtx is initialized
+                // Create a new oscillator
+                this.oscillator = audioCtx.createOscillator();
+                // Create a new gain node
+                this.gain = audioCtx.createGain();
+                // Set initial gain value
+                this.gain.gain.value = this.initialGain;
+                // Set oscillator type
+                this.oscillator.type = this.waveform;
+                // Set frequency
+                this.oscillator.frequency.value = this.frequency;
+                // Exponentially ramp down the gain
+                this.gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + this.dur);
+                // Connect oscillator to gain node
+                this.oscillator.connect(this.gain);
+                // Connect gain node to destination
+                this.gain.connect(audioCtx.destination);
+                // Start the oscillator
+                this.oscillator.start(audioCtx.currentTime);
+                this.stop = false;
+                // Stop the oscillator after duration
+                this.oscillator.stop(audioCtx.currentTime + this.dur);
+                this.oscillator.onended = () => this.stop = true;
+            }
+
+            update(cw, ch) {
+                this.w = cw / 12;
+                this.h = ch / 7;
+            }
+
+            isPointInPath(m) {
+                let x = this.x * this.w;
+                let y = this.y * this.h;
+                ctx.beginPath();
+                ctx.rect(x, y, this.w, this.h);
+                if (ctx.isPointInPath(m.x, m.y) && this.stop) {
+                    this.play();
+                }
+            }
+        }
+
+        // Initialize Rects
+        for (let y = 0; y < 7; y++) {
+            for (let x = 0; x < 12; x++) {
+                let freq = frecuencias[rects.length % frecuencias.length];
+                let r = new Rect(x, y, freq);
+                rects.push(r);
+            }
+        }
+
+        // Particle Class
+        class Particle {
+            constructor() {
+                this.r = 50 + Math.random() * 100;
+                this.x = this.r + Math.random() * (cw - this.r);
+                this.y = Math.random() * ch;
+                this.speed = 0.5 + Math.random() * 2;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+                ctx.fillStyle = grd();
+                ctx.fill();
+            }
+
+            update() {
+                if (this.y < -this.r) {
+                    this.y = ch + this.r;
+                    this.x = this.r + Math.random() * (cw - this.r);
+                }
+                this.y -= this.speed;
+            }
+        }
+
+        // Initialize Particles
+        for (let i = 0; i < 20; i++) {
+            let p = new Particle();
+            particles.push(p);
+        }
+
+        // Note Class
+        class Note {
+            constructor(m) {
+                this.text = symbols[Math.floor(Math.random() * symbols.length)];
+                this.x = m.x;
+                this.y = m.y;
+                this.fontSize = 10 + Math.floor(Math.random() * 40);
+                this.alp = 1;
+                this.speed = Math.random() + 0.5;
+                this.frames = Math.random() * 360;
+                this.angle = Math.sin(this.frames * rad) * Math.PI / 2;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.font = this.fontSize + "px Verdana";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = `rgba(0, 0, 0, ${this.alp})`;
+                ctx.fillText(this.text, 0, 0);
+                ctx.restore();
+            }
+
+            update() {
+                this.frames++;
+                this.fontSize += 0.1;
+                this.alp -= 0.01;
+                this.angle = Math.sin(this.frames * rad) * Math.PI / 2;
+                this.y -= this.speed;
+                this.x += Math.sin(this.frames * rad);
+            }
+        }
+
+        // Draw Function
+        function Draw() {
+            requestId = window.requestAnimationFrame(Draw);
+            ctx.clearRect(0, 0, cw, ch);
+            // Draw particles
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            // Draw notes
+            notes.forEach((n, index) => {
+                n.update();
+                n.draw();
+                if (n.alp <= 0) {
+                    notes.splice(index, 1);
+                }
+            });
+            // Draw Rectangles (optional visual representation)
+            /*
+            rects.forEach(r => {
+                ctx.strokeStyle = '#fff';
+                ctx.strokeRect(r.x * r.w, r.y * r.h, r.w, r.h);
+            });
+            */
+        }
+
+        // Initialize Function
+        function Init() {
+            if (requestId) {
+                window.cancelAnimationFrame(requestId);
+                requestId = null;
+            }
+
+            cw = canvas.width = window.innerWidth;
+            ch = canvas.height = window.innerHeight;
+            w = cw / 12;
+            h = ch / 7;
+            rects.forEach(r => r.update(cw, ch));
+            particles.forEach(p => p.update());
+            Draw();
+        }
+
+        // Start the application after user interaction
+        function startApp() {
+            if (!isAudioStarted) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                isAudioStarted = true;
+                Init();
+                window.addEventListener('resize', Init, false);
+                // Remove the modal
+                const modal = document.getElementById('modal');
+                modal.style.display = 'none';
+            }
+        }
+
+        // Event Listener for Start Button
+        document.getElementById('startButton').addEventListener('click', startApp);
+
+        // Canvas Mouse Move Event
+        canvas.addEventListener("mousemove", function(evt){
+            if (!isAudioStarted) return; // Do nothing if audio not started
+            let m = oMousePos(canvas, evt);
+            rects.forEach(r => r.isPointInPath(m)); // Play sound if necessary
+
+            if (Math.random() < 0.4) { // Add notes with 40% probability
+                let note = new Note(m);
+                notes.push(note);
+            }
+        });
+
+        // Gradient Function
+        function grd(){
+            let grd = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            grd.addColorStop(0, "#ff8701");
+            grd.addColorStop(1, "#ffac02");
+            return grd;
+        }
+
+        // Get Mouse Position Relative to Canvas
+        function oMousePos(canvas, evt) {
+            var ClientRect = canvas.getBoundingClientRect();
+            return { // Object
+                x: Math.round(evt.clientX - ClientRect.left),
+                y: Math.round(evt.clientY - ClientRect.top)
+            };
+        }
+    </script>
+</body>
+</html>
