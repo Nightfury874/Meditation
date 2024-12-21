@@ -195,6 +195,74 @@ h1, h2 {
 #end-session-button:hover, #restart-button:hover {
     background-color: #666;
 }
+/* Popup Overlay */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it's on top of other elements */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Show Popup */
+.popup-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Popup Content */
+.popup-content {
+    background: #ffffff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    max-width: 90%;
+    width: 300px;
+}
+
+/* Headphone SVG Icon */
+.headphone-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
+    color: #333333;
+}
+
+/* Popup Message */
+.popup-content p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #333333;
+    margin-bottom: 20px;
+}
+
+/* Close Button */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #aaaaaa;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-button:hover {
+    color: #000000;
+}
+
 @media screen and (max-width: 600px) {
     .placeholder-image {
         max-width: 200px;
